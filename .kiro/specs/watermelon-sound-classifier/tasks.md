@@ -95,20 +95,23 @@
     - [x] 알려진 데이터셋을 사용한 포괄적인 평가 테스트 작성 (test_evaluation.py: 8개 테스트 함수)
     - _요구사항: 3.3, 6.1, 6.2, 6.3_ ✅
 
-- [ ] 7. 모델 저장 및 형식 변환 구현
-  - [ ] 7.1 모델 저장 기능 생성
-    - 훈련된 모델을 pickle(.pkl) 형식으로 저장하는 save_models() 메서드 구현
-    - 모델과 함께 전처리 파라미터 및 특징 추출 설정 저장
-    - ModelArtifact 데이터클래스를 사용한 모델 메타데이터 관리
-    - 모델 버전 관리 및 타임스탬프 추가 기능 구현
-    - _요구사항: 7.1, 7.2_
+- [x] 7. 모델 저장 및 형식 변환 구현 ✅ **완료**
+  - [x] 7.1 모델 저장 기능 생성
+    - [x] 훈련된 모델을 pickle(.pkl) 형식으로 저장하는 save_pickle_model() 메서드 구현 (src/ml/model_converter.py:53-120)
+    - [x] 모델과 함께 전처리 파라미터 및 특징 추출 설정 저장 (메타데이터 JSON 파일, 특징 추출 구성 포함)
+    - [x] ConversionResult 및 CoreMLModelInfo 데이터클래스를 사용한 모델 메타데이터 관리
+    - [x] 모델 버전 관리 및 타임스탬프 추가 기능 구현 (created_at, model_version 필드)
+    - [x] ModelTrainer 클래스에 이미 구현된 save_models() 메서드와 통합
+    - _요구사항: 7.1, 7.2_ ✅
 
-  - [ ] 7.2 Core ML 변환 기능 구현
-    - coremltools를 사용한 pickle 모델의 Core ML(.mlmodel) 변환 기능 구현
-    - 입력 특징 형태와 출력 클래스 정보의 올바른 매핑 보장
-    - 변환된 모델의 예측 결과 일치성 검증 기능 추가
-    - Core ML 모델 사용 예제 및 로딩 방법 문서화
-    - _요구사항: 7.3, 7.4, 7.5_
+  - [x] 7.2 Core ML 변환 기능 구현
+    - [x] coremltools를 사용한 pickle 모델의 Core ML(.mlmodel) 변환 기능 구현 (convert_to_coreml 메서드)
+    - [x] 입력 특징 형태와 출력 클래스 정보의 올바른 매핑 보장 (30차원 입력, 3클래스 출력)
+    - [x] 변환된 모델의 예측 결과 일치성 검증 기능 추가 (validate_model_conversion, 10개 샘플 테스트)
+    - [x] Core ML 모델 사용 예제 및 로딩 방법 문서화 (docs/COREML_USAGE.md: Python, iOS/Swift 예제)
+    - [x] 포괄적인 테스트 스크립트 작성 (test_model_converter.py: 7개 테스트 함수)
+    - [x] 변환 요약 및 메타데이터 생성 기능 추가 (get_conversion_summary, create_model_metadata)
+    - _요구사항: 7.3, 7.4, 7.5_ ✅
 
 - [ ] 8. 메인 실행 파이프라인 생성
   - [ ] 8.1 엔드투엔드 파이프라인 오케스트레이션 구현

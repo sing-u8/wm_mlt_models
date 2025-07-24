@@ -16,6 +16,12 @@ from .evaluation import (
     EvaluationReport
 )
 
+from .model_converter import (
+    ModelConverter,
+    ConversionResult,
+    CoreMLModelInfo
+)
+
 __all__ = [
     'ModelTrainer',
     'ModelConfig', 
@@ -24,5 +30,8 @@ __all__ = [
     'ModelEvaluator',
     'ClassificationMetrics', 
     'ModelComparison',
-    'EvaluationReport'
+    'EvaluationReport',
+    'ModelConverter',
+    'ConversionResult',
+    'CoreMLModelInfo'
 ]
