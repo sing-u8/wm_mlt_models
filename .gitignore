@@ -1,0 +1,68 @@
+# 바이트 컴파일된 파일 / 최적화 / DLL 파일
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 가상 환경
+venv/
+env/
+ENV/
+.env
+.venv
+
+# 배포 / 패키징
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 유닛 테스트 / 코드 커버리지 보고서
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# IDE 관련 파일
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# 프로젝트 특화 무시 항목
+
+# 데이터 파일 - 원시 오디오 데이터 제외
+data/raw/
+data/noise/
+
+# 처리된 데이터 및 모델 파일 - 모두 자동 생성됨
+data/processed/
+#data/models/
+
+# 로그 파일
+*.log
+
+# 임시 파일
+*.tmp
+
+# OS 생성 파일
+.DS_Store
+Thumbs.db
