@@ -144,22 +144,24 @@
     - [x] pickle 및 Core ML 모델 사용 예제 추가 (docs/MODEL_USAGE_EXAMPLES.md: Python/Swift/Objective-C 예제)
     - _요구사항: 8.2, 8.3, 8.5, 7.5_ ✅
 
-- [ ] 10. 포괄적인 테스트 스위트 생성
-  - [ ] 10.1 모든 구성요소에 대한 단위 테스트 작성
-    - 다양한 오디오 형식을 사용한 특징 추출 단위 테스트 생성
-    - 다양한 SNR 레벨을 사용한 데이터 증강 테스트 작성
-    - 데이터 파이프라인 무결성 및 누출 방지 테스트 추가
-    - 모델 훈련 및 평가 함수에 대한 테스트 구현
-    - 모델 저장 및 Core ML 변환 기능에 대한 테스트 추가
-    - _요구사항: 8.5, 7.1, 7.3_
+- [x] 10. 포괄적인 테스트 스위트 생성 ✅ **완료**
+  - [x] 10.1 모든 구성요소에 대한 단위 테스트 작성 ✅ **완료**
+    - [x] 다양한 오디오 형식을 사용한 특징 추출 단위 테스트 생성 (tests/unit/audio/test_feature_extraction_extended.py: 극단적 경우, 다양한 형식, 에러 처리)
+    - [x] 다양한 SNR 레벨을 사용한 데이터 증강 테스트 작성 (tests/unit/data/test_augmentation_extended.py: 극단적 SNR, 다양한 노이즈 유형, 성능 테스트)
+    - [x] 데이터 파이프라인 무결성 및 누출 방지 테스트 추가 (기존 test_pipeline.py에 포함, 데이터 무결성 검증)
+    - [x] 모델 훈련 및 평가 함수에 대한 테스트 구현 (기존 test_training.py, test_evaluation.py에 포함)
+    - [x] 모델 저장 및 Core ML 변환 기능에 대한 테스트 추가 (기존 test_model_converter.py에 포함)
+    - [x] 유틸리티 모듈 및 설정 테스트 추가 (tests/unit/utils/test_file_utils.py, tests/unit/test_config.py)
+    - _요구사항: 8.5, 7.1, 7.3_ ✅
 
-  - [ ] 10.2 통합 및 성능 테스트 추가
-    - 샘플 데이터셋을 사용한 엔드투엔드 통합 테스트 작성
-    - 처리 속도 및 메모리 사용량에 대한 성능 벤치마크 생성
-    - 손상되거나 비정상적인 오디오 파일에 대한 극단적 경우 테스트 추가
-    - 실행 간 일관된 결과를 보장하는 회귀 테스트 구현
-    - pickle과 Core ML 모델 간 예측 결과 일치성 테스트 추가
-    - _요구사항: 8.5, 7.4_
+  - [x] 10.2 통합 및 성능 테스트 추가 ✅ **완료**
+    - [x] 샘플 데이터셋을 사용한 엔드투엔드 통합 테스트 작성 (기존 tests/integration/test_integration.py에 포함, 전체 파이프라인 검증)
+    - [x] 처리 속도 및 메모리 사용량에 대한 성능 벤치마크 생성 (tests/performance/test_benchmarks.py: 종합 성능 벤치마크)
+    - [x] 손상되거나 비정상적인 오디오 파일에 대한 극단적 경우 테스트 추가 (feature_extraction_extended.py에 포함)
+    - [x] 실행 간 일관된 결과를 보장하는 회귀 테스는 재현성 테스트 구현 (각 테스트 모듈에 재현성 테스트 포함)
+    - [x] pickle과 Core ML 모델 간 예측 결과 일치성 테스트 추가 (test_model_converter.py에 포함)
+    - [x] 테스트 구조화 및 실행 자동화 (tests/ 디렉토리 구조화, pytest.ini, run_tests.py, conftest.py)
+    - _요구사항: 8.5, 7.4_ ✅
 
 - [ ] 11. 구현 최적화 및 완료
   - [ ] 11.1 성능 최적화 및 확장성
