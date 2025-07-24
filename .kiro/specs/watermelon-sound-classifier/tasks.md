@@ -44,23 +44,23 @@
     - [x] SNR 계산 및 오디오 혼합에 대한 단위 테스트 작성 (test_augmentation.py)
     - _요구사항: 2.1, 2.2, 2.5, 7.5_ ✅
 
-- [ ] 4. 데이터 파이프라인 관리 구현
-  - [ ] 4.1 데이터 로딩 및 분할 기능 생성
-    - data/raw/train/ 디렉토리에서 클래스별 오디오 파일을 로드하는 load_train_data() 함수 작성
-    - data/raw/validation/ 디렉토리에서 클래스별 오디오 파일을 로드하는 load_validation_data() 함수 작성
-    - data/raw/test/ 디렉토리에서 클래스별 오디오 파일을 로드하는 load_test_data() 함수 작성
-    - data/noise/ 디렉토리에서 사용 가능한 소음 파일을 재귀적으로 로드하는 load_noise_files() 함수 구현
-    - 파일 경로 관리 및 메타데이터 추적 추가
-    - 메타데이터 관리를 위한 AudioFile 데이터클래스 생성
-    - _요구사항: 4.1, 4.5, 8.1_
+- [x] 4. 데이터 파이프라인 관리 구현 ✅ **완료**
+  - [x] 4.1 데이터 로딩 및 분할 기능 생성
+    - [x] data/raw/train/ 디렉토리에서 클래스별 오디오 파일을 로드하는 load_train_data() 함수 작성 (DataPipeline.load_train_data)
+    - [x] data/raw/validation/ 디렉토리에서 클래스별 오디오 파일을 로드하는 load_validation_data() 함수 작성 (DataPipeline.load_validation_data)
+    - [x] data/raw/test/ 디렉토리에서 클래스별 오디오 파일을 로드하는 load_test_data() 함수 작성 (DataPipeline.load_test_data)
+    - [x] data/noise/ 디렉토리에서 사용 가능한 소음 파일을 재귀적으로 로드하는 load_noise_files() 함수 구현 (DataPipeline.load_noise_files)
+    - [x] 파일 경로 관리 및 메타데이터 추적 추가 (AudioFile: 크기, 지속시간, SNR 정보 등)
+    - [x] 메타데이터 관리를 위한 AudioFile 데이터클래스 생성 (src/data/pipeline.py:18-42)
+    - _요구사항: 4.1, 4.5, 8.1_ ✅
 
-  - [ ] 4.2 누출 방지를 통한 파이프라인 오케스트레이션 구현
-    - 완전한 데이터 흐름을 관리하는 DataPipeline 클래스 생성
-    - 적절한 순서 구현: 분할 → 소음 파일 탐색 → 훈련만 증강 → 특징 추출
-    - 소음 파일이 없는 폴더를 자동으로 건너뛰는 로직 구현
-    - 증강 중 테스트/검증 세트가 건드려지지 않도록 보장하는 검증 추가
-    - 데이터 누출이 발생하지 않음을 확인하는 통합 테스트 작성
-    - _요구사항: 4.1, 4.2, 4.3, 4.4, 4.5_
+  - [x] 4.2 누출 방지를 통한 파이프라인 오케스트레이션 구현
+    - [x] 완전한 데이터 흐름을 관리하는 DataPipeline 클래스 생성 (src/data/pipeline.py:61-608)
+    - [x] 적절한 순서 구현: 분할 → 소음 파일 탐색 → 훈련만 증강 → 특징 추출 (run_complete_pipeline)
+    - [x] 소음 파일이 없는 폴더를 자동으로 건너뛰는 로직 구현 (augment_training_data: fallback 로직)
+    - [x] 증강 중 테스트/검증 세트가 건드려지지 않도록 보장하는 검증 추가 (validate_data_integrity)
+    - [x] 데이터 누출이 발생하지 않음을 확인하는 통합 테스트 작성 (test_pipeline.py: test_data_leakage_prevention)
+    - _요구사항: 4.1, 4.2, 4.3, 4.4, 4.5_ ✅
 
 - [ ] 5. 머신러닝 훈련 모듈 구현
   - [ ] 5.1 모델 구성 및 초기화 생성

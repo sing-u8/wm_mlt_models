@@ -9,9 +9,18 @@ from .augmentation import (
     AugmentationResult
 )
 
+from .pipeline import (
+    DataPipeline,
+    AudioFile,
+    DatasetSplit
+)
+
 __all__ = [
     'augment_noise', 
     'AudioAugmentor', 
     'BatchAugmentor',
-    'AugmentationResult'
+    'AugmentationResult',
+    'DataPipeline',
+    'AudioFile',
+    'DatasetSplit'
 ]
