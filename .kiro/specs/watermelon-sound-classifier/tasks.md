@@ -62,20 +62,21 @@
     - [x] 데이터 누출이 발생하지 않음을 확인하는 통합 테스트 작성 (test_pipeline.py: test_data_leakage_prevention)
     - _요구사항: 4.1, 4.2, 4.3, 4.4, 4.5_ ✅
 
-- [ ] 5. 머신러닝 훈련 모듈 구현
-  - [ ] 5.1 모델 구성 및 초기화 생성
-    - 하이퍼파라미터 그리드를 가진 SVM 및 Random Forest 모델 구성 정의
-    - 모델 초기화를 가진 ModelTrainer 클래스 구현
-    - 두 모델에 대한 하이퍼파라미터 그리드 정의 추가
-    - 훈련된 모델 저장/로딩을 위한 모델 지속성 기능 생성
-    - _요구사항: 3.1, 3.2, 3.4, 7.1_
+- [x] 5. 머신러닝 훈련 모듈 구현 ✅ **완료**
+  - [x] 5.1 모델 구성 및 초기화 생성
+    - [x] 하이퍼파라미터 그리드를 가진 SVM 및 Random Forest 모델 구성 정의 (ModelConfig 클래스, design.md 명세)
+    - [x] 모델 초기화를 가진 ModelTrainer 클래스 구현 (src/ml/training.py:70-557)
+    - [x] 두 모델에 대한 하이퍼파라미터 그리드 정의 추가 (_initialize_model_configs: SVM C/gamma, RF n_estimators/max_depth/min_samples_split)
+    - [x] 훈련된 모델 저장/로딩을 위한 모델 지속성 기능 생성 (save_models, load_model, ModelArtifact 클래스)
+    - _요구사항: 3.1, 3.2, 3.4, 7.1_ ✅
 
-  - [ ] 5.2 교차 검증 훈련 파이프라인 구현
-    - 5-fold 교차 검증과 함께 GridSearchCV를 사용하는 train_with_cv() 메서드 작성
-    - 클래스 분포를 유지하기 위한 계층화된 K-fold 구현
-    - SVM과 Random Forest 모두에 대한 하이퍼파라미터 최적화 추가
-    - 교차 검증 점수 추적 및 최적 매개변수 선택 생성
-    - _요구사항: 5.1, 5.2, 5.3, 5.4_
+  - [x] 5.2 교차 검증 훈련 파이프라인 구현
+    - [x] 5-fold 교차 검증과 함께 GridSearchCV를 사용하는 train_with_cv() 메서드 작성 (src/ml/training.py:262-307)
+    - [x] 클래스 분포를 유지하기 위한 계층화된 K-fold 구현 (StratifiedKFold with shuffle=True)
+    - [x] SVM과 Random Forest 모두에 대한 하이퍼파라미터 최적화 추가 (GridSearchCV with param_grid)
+    - [x] 교차 검증 점수 추적 및 최적 매개변수 선택 생성 (TrainingResult 클래스, best_params/best_score/cv_scores)
+    - [x] 포괄적인 테스트 스크립트 작성 (test_training.py: 7개 테스트 함수)
+    - _요구사항: 5.1, 5.2, 5.3, 5.4_ ✅
 
 - [ ] 6. 모델 평가 및 메트릭 구현
   - [ ] 6.1 포괄적인 평가 기능 생성
