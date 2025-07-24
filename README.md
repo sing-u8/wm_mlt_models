@@ -102,10 +102,24 @@ ls -la data/raw/
 ls -la data/noise/
 
 # 파일 개수 확인
-find data/raw/watermelon_A/ -name "*.wav" | wc -l
-find data/raw/watermelon_B/ -name "*.wav" | wc -l  
-find data/raw/watermelon_C/ -name "*.wav" | wc -l
-find data/noise/environmental/ -name "*.wav" | wc -l
+# 훈련 데이터
+find data/raw/train/watermelon_A/ -name "*.wav" | wc -l
+find data/raw/train/watermelon_B/ -name "*.wav" | wc -l  
+find data/raw/train/watermelon_C/ -name "*.wav" | wc -l
+
+# 검증 데이터
+find data/raw/validation/watermelon_A/ -name "*.wav" | wc -l
+find data/raw/validation/watermelon_B/ -name "*.wav" | wc -l  
+find data/raw/validation/watermelon_C/ -name "*.wav" | wc -l
+
+# 테스트 데이터
+find data/raw/test/watermelon_A/ -name "*.wav" | wc -l
+find data/raw/test/watermelon_B/ -name "*.wav" | wc -l  
+find data/raw/test/watermelon_C/ -name "*.wav" | wc -l
+
+# 소음 파일
+find data/noise/environmental/retail/homeplus/ -name "*.wav" | wc -l
+find data/noise/environmental/retail/emart/ -name "*.wav" | wc -l
 find data/noise/mechanical/ -name "*.wav" | wc -l
 find data/noise/background/ -name "*.wav" | wc -l
 ```

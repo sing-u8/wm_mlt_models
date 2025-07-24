@@ -1,30 +1,31 @@
 # 구현 계획
 
-- [x] 1. 프로젝트 구조 및 핵심 구성 설정 ✅ **완료**
-  - [x] 표준화된 데이터 디렉토리 구조 생성 (data/raw/, data/noise/, data/processed/, data/models/)
+- [x] 1. 프로젝트 구조 및 핵심 구성 설정 ✅ **완료 및 업데이트됨**
+  - [x] 표준화된 데이터 디렉토리 구조 생성 (pre-split: data/raw/train|validation|test/, retail noise: data/noise/environmental/retail/homeplus|emart/)
   - [x] 모듈, 소스코드, 구성파일을 위한 디렉토리 구조 생성 (src/, config/, logs/, results/)
-  - [x] 데이터클래스를 사용한 구성 관리 시스템 구현 (config/config.py, Config 클래스)
+  - [x] 데이터클래스를 사용한 구성 관리 시스템 구현 (Config 클래스: pre-split 지원, 재귀적 소음 파일 검색, 유연한 증강 설정)
   - [x] 디버깅 및 모니터링을 위한 로깅 인프라 설정 (src/utils/logger.py, LoggerMixin)
   - [x] 모든 필요한 의존성을 포함한 requirements.txt 생성 (librosa, scikit-learn, coremltools 등)
-  - [x] 데이터 파일 배치 가이드 및 README 문서 생성 (DATA_PLACEMENT_GUIDE.md, README.md 업데이트)
+  - [x] 데이터 파일 배치 가이드 및 README 문서 생성 (DATA_PLACEMENT_GUIDE.md, README.md: retail 환경 특화)
+  - [x] 구성 검증 및 테스트 (test_config.py: 24개 소음 파일 검증 완료)
   - _요구사항: 8.1, 8.4, 8.5_ ✅
 
-- [ ] 2. 오디오 특징 추출 모듈 구현
-  - [ ] 2.1 librosa를 사용한 핵심 특징 추출 함수 생성
-    - 오디오를 로드하고 모든 필요한 특징을 추출하는 extract_features() 함수 작성
-    - 13개 계수를 가진 MFCC 추출 구현
-    - Mel Spectrogram 통계 계산 추가 (평균, 표준편차)
-    - Spectral Centroid, Spectral Rolloff, Zero Crossing Rate 추출 포함
-    - 12차원 Chroma Features 추출 구현
-    - 특징 벡터 연결 생성 및 numpy 배열로 반환
-    - _요구사항: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7_
+- [x] 2. 오디오 특징 추출 모듈 구현 ✅ **완료**
+  - [x] 2.1 librosa를 사용한 핵심 특징 추출 함수 생성
+    - [x] 오디오를 로드하고 모든 필요한 특징을 추출하는 extract_features() 함수 작성 (src/audio/feature_extraction.py)
+    - [x] 13개 계수를 가진 MFCC 추출 구현 (AudioFeatureExtractor.extract_mfcc)
+    - [x] Mel Spectrogram 통계 계산 추가 (평균, 표준편차) (AudioFeatureExtractor.extract_mel_spectrogram_stats)
+    - [x] Spectral Centroid, Spectral Rolloff, Zero Crossing Rate 추출 포함 (AudioFeatureExtractor.extract_spectral_features)
+    - [x] 12차원 Chroma Features 추출 구현 (AudioFeatureExtractor.extract_chroma_features)
+    - [x] 특징 벡터 연결 생성 및 numpy 배열로 반환 (FeatureVector.to_array, 30차원 벡터)
+    - _요구사항: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7_ ✅
 
-  - [ ] 2.2 특징 추출 검증 및 오류 처리 추가
-    - 오디오 파일 검증 구현 (형식, 손상, 무음 감지)
-    - librosa 로딩 실패에 대한 오류 처리 추가
-    - 특징 벡터 형태 및 값 범위 검증 생성
-    - 샘플 오디오 파일을 사용한 특징 추출 단위 테스트 작성
-    - _요구사항: 1.1, 1.7, 7.5_
+  - [x] 2.2 특징 추출 검증 및 오류 처리 추가
+    - [x] 오디오 파일 검증 구현 (형식, 손상, 무음 감지) (AudioFeatureExtractor.validate_audio_file)
+    - [x] librosa 로딩 실패에 대한 오류 처리 추가 (AudioFeatureExtractor.load_audio)
+    - [x] 특징 벡터 형태 및 값 범위 검증 생성 (extract_features: NaN/infinity 처리, 크기 검증)
+    - [x] 샘플 오디오 파일을 사용한 특징 추출 단위 테스트 작성 (test_feature_extraction.py)
+    - _요구사항: 1.1, 1.7, 7.5_ ✅
 
 - [ ] 3. 데이터 증강 모듈 구현
   - [ ] 3.1 SNR 제어를 통한 소음 증강 함수 생성

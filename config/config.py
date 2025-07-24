@@ -27,12 +27,11 @@ class Config:
     
     # 데이터 증강 설정
     snr_levels: List[float] = field(default_factory=lambda: [-5, 0, 5, 10])
-    augmentation_factor: int = 4
+    augmentation_factor: int = 4  # 소음 파일이 충분할 때의 목표 증강 배수
+    min_noise_files: int = 1  # 증강을 위한 최소 소음 파일 수
     
-    # 모델 훈련 파라미터
+    # 모델 훈련 파라미터 (데이터는 이미 분할되어 있음)
     cv_folds: int = 5
-    test_size: float = 0.1
-    val_size: float = 0.2
     random_state: int = 42
     
     # 성능 설정
@@ -56,20 +55,51 @@ class Config:
         self.processed_dir = str(base_path / self.processed_dir)
         self.model_output_dir = str(base_path / self.model_output_dir)
     
-    def get_class_directories(self) -> Dict[str, str]:
-        """클래스별 원본 데이터 디렉토리 경로 반환."""
+    def get_train_directories(self) -> Dict[str, str]:
+        """훈련용 클래스별 디렉토리 경로 반환."""
         return {
-            class_name: os.path.join(self.raw_data_dir, class_name)
+            class_name: os.path.join(self.raw_data_dir, "train", class_name)
             for class_name in self.class_names
         }
+    
+    def get_validation_directories(self) -> Dict[str, str]:
+        """검증용 클래스별 디렉토리 경로 반환."""
+        return {
+            class_name: os.path.join(self.raw_data_dir, "validation", class_name)
+            for class_name in self.class_names
+        }
+    
+    def get_test_directories(self) -> Dict[str, str]:
+        """테스트용 클래스별 디렉토리 경로 반환."""
+        return {
+            class_name: os.path.join(self.raw_data_dir, "test", class_name)
+            for class_name in self.class_names
+        }
+    
+    def get_class_directories(self) -> Dict[str, str]:
+        """클래스별 원본 데이터 디렉토리 경로 반환 (하위 호환성을 위해 유지)."""
+        return self.get_train_directories()
     
     def get_noise_subdirectories(self) -> Dict[str, str]:
         """소음 타입별 디렉토리 경로 반환."""
         return {
-            "environmental": os.path.join(self.noise_dir, "environmental"),
+            "retail_homeplus": os.path.join(self.noise_dir, "environmental", "retail", "homeplus"),
+            "retail_emart": os.path.join(self.noise_dir, "environmental", "retail", "emart"),
             "mechanical": os.path.join(self.noise_dir, "mechanical"),
             "background": os.path.join(self.noise_dir, "background")
         }
+    
+    def get_all_noise_files(self) -> List[str]:
+        """사용 가능한 모든 소음 파일을 재귀적으로 검색하여 반환."""
+        noise_files = []
+        
+        # data/noise/ 하위의 모든 디렉토리를 재귀적으로 탐색
+        for root, dirs, files in os.walk(self.noise_dir):
+            for file in files:
+                if file.lower().endswith('.wav'):
+                    noise_files.append(os.path.join(root, file))
+        
+        return noise_files
     
     def get_processed_directories(self) -> Dict[str, str]:
         """처리된 데이터 디렉토리 경로 반환."""
