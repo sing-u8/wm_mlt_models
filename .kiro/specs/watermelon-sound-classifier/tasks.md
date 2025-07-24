@@ -78,20 +78,22 @@
     - [x] 포괄적인 테스트 스크립트 작성 (test_training.py: 7개 테스트 함수)
     - _요구사항: 5.1, 5.2, 5.3, 5.4_ ✅
 
-- [ ] 6. 모델 평가 및 메트릭 구현
-  - [ ] 6.1 포괄적인 평가 기능 생성
-    - 테스트 세트 평가를 위한 evaluate_final() 메서드 작성
-    - 정확도, 정밀도, 재현율, F1-score 계산 구현
-    - 혼동 행렬 생성 및 시각화 추가
-    - 클래스별 및 매크로 평균 메트릭 보고 생성
-    - _요구사항: 6.1, 6.2, 6.3_
+- [x] 6. 모델 평가 및 메트릭 구현 ✅ **완료**
+  - [x] 6.1 포괄적인 평가 기능 생성
+    - [x] 테스트 세트 평가를 위한 evaluate_model() 메서드 작성 (src/ml/evaluation.py:110-240)
+    - [x] 정확도, 정밀도, 재현율, F1-score 계산 구현 (ClassificationMetrics 클래스, macro/weighted 평균)
+    - [x] 혼동 행렬 생성 및 시각화 추가 (plot_confusion_matrix, seaborn heatmap)
+    - [x] 클래스별 및 매크로 평균 메트릭 보고 생성 (class_precision, class_recall, class_f1)
+    - [x] ROC AUC 및 PR AUC 계산 추가 (다중 클래스 지원)
+    - _요구사항: 6.1, 6.2, 6.3_ ✅
 
-  - [ ] 6.2 성능 비교 및 보고 추가
-    - SVM과 Random Forest 간의 모델 비교 기능 구현
-    - 통계적 유의성 테스트를 포함한 상세한 성능 보고서 생성
-    - 혼동 행렬 및 성능 메트릭에 대한 시각화 추가
-    - 알려진 데이터셋을 사용한 포괄적인 평가 테스트 작성
-    - _요구사항: 3.3, 6.1, 6.2, 6.3_
+  - [x] 6.2 성능 비교 및 보고 추가
+    - [x] SVM과 Random Forest 간의 모델 비교 기능 구현 (compare_models 메서드)
+    - [x] 통계적 유의성 테스트를 포함한 상세한 성능 보고서 생성 (t-test, ModelComparison 클래스)
+    - [x] 혼동 행렬 및 성능 메트릭에 대한 시각화 추가 (plot_model_comparison, 4개 subplot)
+    - [x] 종합 평가 보고서 생성 기능 구현 (EvaluationReport, JSON 저장/로딩)
+    - [x] 알려진 데이터셋을 사용한 포괄적인 평가 테스트 작성 (test_evaluation.py: 8개 테스트 함수)
+    - _요구사항: 3.3, 6.1, 6.2, 6.3_ ✅
 
 - [ ] 7. 모델 저장 및 형식 변환 구현
   - [ ] 7.1 모델 저장 기능 생성

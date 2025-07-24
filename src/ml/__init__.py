@@ -9,9 +9,20 @@ from .training import (
     ModelArtifact
 )
 
+from .evaluation import (
+    ModelEvaluator,
+    ClassificationMetrics,
+    ModelComparison,
+    EvaluationReport
+)
+
 __all__ = [
     'ModelTrainer',
     'ModelConfig', 
     'TrainingResult',
-    'ModelArtifact'
+    'ModelArtifact',
+    'ModelEvaluator',
+    'ClassificationMetrics', 
+    'ModelComparison',
+    'EvaluationReport'
 ]
