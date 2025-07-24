@@ -22,6 +22,23 @@ from config import DEFAULT_CONFIG
 class AugmentationResult:
     """
     증강 결과를 나타내는 데이터 클래스.
+    
+    단일 오디오 파일에 대한 증강 프로세스의 결과를 추적합니다.
+    증강 프로세스의 성공 여부와 생성된 파일들의 정보를 포함합니다.
+    
+    Attributes:
+        original_file : str
+            증강의 대상이 된 원본 오디오 파일의 경로
+        augmented_files : List[str]
+            생성된 모든 증강 파일들의 경로 리스트
+        noise_types_used : List[str]
+            증강에 사용된 소음 유형들 (예: 'homeplus', 'emart')
+        snr_levels_used : List[float]
+            적용된 SNR 레벨들 (dB 단위)
+        total_created : int
+            생성된 증강 파일의 총 개수
+        skipped_noise_files : List[str]
+            오류로 인해 사용할 수 없었던 소음 파일들의 경로
     """
     original_file: str
     augmented_files: List[str]

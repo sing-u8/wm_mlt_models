@@ -21,7 +21,24 @@ class FeatureVector:
     """
     오디오 특징 벡터를 나타내는 데이터 클래스.
     
-    design.md에 명시된 구조를 따릅니다.
+    design.md에 명시된 구조를 따릅니다. 이 클래스는 추출된 모든 오디오 특징을
+    구조화된 형태로 저장하고 ML 모델 입력용 평면 배열로 변환하는 기능을 제공합니다.
+    
+    Attributes:
+        mfcc : np.ndarray
+            13개 MFCC 계수의 평균값. 형태: (13,)
+        mel_mean : float
+            멜 스펙트로그램의 평균값 (스칼라)
+        mel_std : float
+            멜 스펙트로그램의 표준편차 (스칼라)
+        spectral_centroid : float
+            스펙트럴 중심의 평균값 (스칼라)
+        spectral_rolloff : float
+            스펙트럴 롤오프의 평균값 (스칼라)
+        zero_crossing_rate : float
+            제로 교차율의 평균값 (스칼라)
+        chroma : np.ndarray
+            12개 크로마 특징의 평균값. 형태: (12,)
     """
     mfcc: np.ndarray          # 형태: (13,)
     mel_mean: float           # 스칼라
@@ -32,17 +49,29 @@ class FeatureVector:
     chroma: np.ndarray        # 형태: (12,)
     
     def to_array(self) -> np.ndarray:
-        """ML 모델을 위해 평면 numpy 배열로 변환합니다."""
+        """
+        ML 모델을 위해 평면 numpy 배열로 변환합니다.
+        
+        Returns:
+            np.ndarray: 모든 특징이 연결된 1차원 배열. 형태: (30,)
+                       순서: MFCC(13) + 통계(5) + Chroma(12)
+        """
         return np.concatenate([
             self.mfcc,
             [self.mel_mean, self.mel_std, self.spectral_centroid, 
              self.spectral_rolloff, self.zero_crossing_rate],
             self.chroma
-        ])  # 총 형태: (28,)
+        ])  # 총 형태: (30,)
     
     @property
     def feature_names(self) -> list:
-        """특징 이름 목록을 반환합니다."""
+        """
+        특징 이름 목록을 반환합니다.
+        
+        Returns:
+            list: 30개 특징의 이름 리스트
+                 예: ['mfcc_1', 'mfcc_2', ..., 'mel_mean', ..., 'chroma_1', ...]
+        """
         names = []
         
         # MFCC 특징 이름

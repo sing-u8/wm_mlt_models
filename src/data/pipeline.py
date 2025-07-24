@@ -22,6 +22,29 @@ from config import DEFAULT_CONFIG
 class AudioFile:
     """
     오디오 파일 메타데이터를 관리하는 데이터 클래스.
+    
+    파이프라인 전체에서 오디오 파일의 정보를 추적하고 관리합니다.
+    증강된 파일의 경우 원본 파일과의 관계 및 증강 파라미터를 저장합니다.
+    
+    Attributes:
+        file_path : str
+            오디오 파일의 전체 경로
+        class_name : str
+            오디오가 속한 클래스명 (예: 'good', 'bad', 'mid')
+        split : str
+            데이터셋 분할 유형 ('train', 'validation', 'test')
+        is_augmented : bool
+            증강된 파일인지 여부 (기본값: False)
+        original_file : Optional[str]
+            증강된 경우 원본 파일의 경로 (기본값: None)
+        noise_type : Optional[str]
+            사용된 소음 타입 (예: 'homeplus', 'emart') (기본값: None)
+        snr_level : Optional[float]
+            적용된 SNR 레벨 (dB 단위) (기본값: None)
+        file_size : Optional[int]
+            파일 크기 (바이트 단위) (기본값: None)
+        duration : Optional[float]
+            오디오 길이 (초 단위) (기본값: None)
     """
     file_path: str
     class_name: str
@@ -34,7 +57,12 @@ class AudioFile:
     duration: Optional[float] = None     # 오디오 길이 (seconds)
     
     def __post_init__(self):
-        """파일 메타데이터 자동 설정"""
+        """
+        파일 메타데이터 자동 설정.
+        
+        파일 크기를 자동으로 읽고, 증강된 파일의 경우
+        파일명에서 SNR 정보를 추출합니다.
+        """
         if os.path.exists(self.file_path):
             self.file_size = os.path.getsize(self.file_path)
         
@@ -57,6 +85,18 @@ class AudioFile:
 class DatasetSplit:
     """
     데이터셋 분할 정보를 담는 데이터 클래스.
+    
+    훈련, 검증, 테스트 세트의 파일 정보와 통계를 관리합니다.
+    
+    Attributes:
+        train_files : List[AudioFile]
+            훈련 세트의 오디오 파일 리스트
+        validation_files : List[AudioFile]
+            검증 세트의 오디오 파일 리스트
+        test_files : List[AudioFile]
+            테스트 세트의 오디오 파일 리스트
+        class_distribution : Dict[str, Dict[str, int]]
+            각 분할별 클래스 분포 {'train': {'good': 10, ...}, ...}
     """
     train_files: Dict[str, List[AudioFile]]
     validation_files: Dict[str, List[AudioFile]]
