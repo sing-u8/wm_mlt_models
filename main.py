@@ -30,6 +30,8 @@ from src.ml.training import ModelTrainer
 from src.ml.evaluation import ModelEvaluator
 from src.ml.model_converter import ModelConverter
 from src.utils.logger import setup_logger
+from src.utils.data_integrity import DataIntegrityChecker
+from src.utils.performance_monitor import PerformanceMonitor
 from config import DEFAULT_CONFIG
 
 
@@ -110,7 +112,8 @@ class WatermelonClassificationPipeline:
     4. 모델 저장 및 형식 변환
     """
     
-    def __init__(self, config=None, checkpoint_dir: str = "checkpoints"):
+    def __init__(self, config=None, checkpoint_dir: str = "checkpoints", 
+                 enable_integrity_checks: bool = True, enable_performance_monitoring: bool = True):
         """
         파이프라인을 초기화합니다.
         
@@ -120,6 +123,10 @@ class WatermelonClassificationPipeline:
             구성 객체. None이면 기본 구성을 사용합니다.
         checkpoint_dir : str
             체크포인트 디렉토리
+        enable_integrity_checks : bool
+            데이터 무결성 검사 활성화 여부
+        enable_performance_monitoring : bool
+            성능 모니터링 활성화 여부
         """
         self.config = config or DEFAULT_CONFIG
         self.logger = setup_logger("WatermelonPipeline", "INFO")
@@ -131,13 +138,20 @@ class WatermelonClassificationPipeline:
         self.model_evaluator = ModelEvaluator(self.config)
         self.model_converter = ModelConverter(self.config)
         
+        # 데이터 무결성 검사 및 성능 모니터링 초기화
+        self.integrity_checker = DataIntegrityChecker(self.config) if enable_integrity_checks else None
+        self.performance_monitor = PerformanceMonitor(enable_performance_monitoring) if enable_performance_monitoring else None
+        
         # 실행 통계
         self.pipeline_start_time = None
         self.step_times = {}
+        self.integrity_reports = []
         
         self.logger.info("🚀 수박 소리 분류 파이프라인 초기화 완료")
         self.logger.info(f"구성: {len(self.config.class_names)}개 클래스, "
                         f"샘플레이트 {self.config.sample_rate}Hz")
+        self.logger.info(f"데이터 무결성 검사: {'활성화' if enable_integrity_checks else '비활성화'}")
+        self.logger.info(f"성능 모니터링: {'활성화' if enable_performance_monitoring else '비활성화'}")
     
     def step_1_load_data(self, skip_augmentation: bool = False) -> Tuple:
         """
@@ -158,6 +172,10 @@ class WatermelonClassificationPipeline:
         self.logger.info("📊 1단계: 데이터 로딩 및 전처리 시작")
         self.logger.info("=" * 60)
         
+        # 성능 모니터링 시작
+        if self.performance_monitor:
+            self.performance_monitor.start_step_monitoring("data_loading")
+        
         try:
             # 데이터 파이프라인 실행
             self.logger.info("데이터 파이프라인 실행 중...")
@@ -174,6 +192,39 @@ class WatermelonClassificationPipeline:
             y_val = datasets['validation']['labels']
             X_test = datasets['test']['features']
             y_test = datasets['test']['labels']
+            
+            # 데이터 무결성 검사
+            if self.integrity_checker:
+                # 각 데이터셋 개별 검사
+                if len(X_train) > 0:
+                    train_report = self.integrity_checker.check_audio_features(
+                        X_train, y_train, "training_data"
+                    )
+                    self.integrity_reports.append(train_report)
+                    
+                    if not train_report.passed:
+                        self.logger.warning("⚠️ 훈련 데이터 무결성 검사에서 문제 발견")
+                
+                if len(X_val) > 0:
+                    val_report = self.integrity_checker.check_audio_features(
+                        X_val, y_val, "validation_data"
+                    )
+                    self.integrity_reports.append(val_report)
+                
+                if len(X_test) > 0:
+                    test_report = self.integrity_checker.check_audio_features(
+                        X_test, y_test, "test_data"
+                    )
+                    self.integrity_reports.append(test_report)
+                
+                # 파이프라인 일관성 검사
+                consistency_report = self.integrity_checker.check_pipeline_consistency(
+                    (X_train, y_train), (X_val, y_val), (X_test, y_test), "data_loading_consistency"
+                )
+                self.integrity_reports.append(consistency_report)
+                
+                if not consistency_report.passed:
+                    self.logger.warning("⚠️ 데이터 일관성 검사에서 문제 발견")
             
             # 데이터 통계 로깅
             self.logger.info(f"✅ 데이터 로딩 완료:")
@@ -194,13 +245,26 @@ class WatermelonClassificationPipeline:
             step_time = time.time() - step_start_time
             self.step_times['data_loading'] = step_time
             
+            # 성능 모니터링 종료
+            if self.performance_monitor:
+                custom_metrics = {
+                    'train_samples': len(X_train),
+                    'val_samples': len(X_val),
+                    'test_samples': len(X_test),
+                    'total_samples': len(X_train) + len(X_val) + len(X_test),
+                    'feature_dimension': X_train.shape[1] if len(X_train) > 0 else 0,
+                    'augmentation_skipped': skip_augmentation
+                }
+                self.performance_monitor.end_step_monitoring("data_loading", custom_metrics)
+            
             # 체크포인트 저장
             checkpoint_data = {
                 'train_samples': len(X_train),
                 'val_samples': len(X_val),
                 'test_samples': len(X_test),
                 'feature_dim': X_train.shape[1] if len(X_train) > 0 else 0,
-                'augmentation_skipped': skip_augmentation
+                'augmentation_skipped': skip_augmentation,
+                'integrity_checks_passed': len([r for r in self.integrity_reports if r.passed]) if self.integrity_checker else 0
             }
             self.checkpoint_manager.save_checkpoint('data_loading', checkpoint_data, step_time)
             
@@ -209,6 +273,10 @@ class WatermelonClassificationPipeline:
             return X_train, y_train, X_val, y_val, X_test, y_test
             
         except Exception as e:
+            # 오류 발생 시에도 성능 모니터링 종료
+            if self.performance_monitor:
+                self.performance_monitor.end_step_monitoring("data_loading", {'error': str(e)})
+                
             self.logger.error(f"❌ 1단계 실패: {e}")
             raise
     
@@ -293,6 +361,10 @@ class WatermelonClassificationPipeline:
         self.logger.info("📈 3단계: 모델 평가 시작")
         self.logger.info("=" * 60)
         
+        # 성능 모니터링 시작
+        if self.performance_monitor:
+            self.performance_monitor.start_step_monitoring("model_evaluation")
+        
         try:
             # 개별 모델 평가
             evaluation_results = {}
@@ -305,6 +377,23 @@ class WatermelonClassificationPipeline:
                 )
                 
                 evaluation_results[model_name] = eval_result
+                
+                # 모델 출력 무결성 검사
+                if self.integrity_checker and len(X_test) > 0:
+                    # 예측 결과 생성
+                    predictions = model.predict(X_test)
+                    probabilities = None
+                    if hasattr(model, 'predict_proba'):
+                        probabilities = model.predict_proba(X_test)
+                    
+                    # 무결성 검사 수행
+                    output_report = self.integrity_checker.check_model_outputs(
+                        predictions, probabilities, y_test, f"{model_name}_predictions"
+                    )
+                    self.integrity_reports.append(output_report)
+                    
+                    if not output_report.passed:
+                        self.logger.warning(f"⚠️ {model_name} 모델 출력 무결성 검사에서 문제 발견")
                 
                 # 평가 결과 로깅
                 metrics = eval_result.classification_metrics
@@ -343,13 +432,26 @@ class WatermelonClassificationPipeline:
             step_time = time.time() - step_start_time
             self.step_times['model_evaluation'] = step_time
             
+            # 성능 모니터링 종료
+            if self.performance_monitor:
+                custom_metrics = {
+                    'models_evaluated': len(self.model_trainer.trained_models),
+                    'test_samples': len(X_test),
+                    'best_accuracy': max([evaluation_results[k].classification_metrics.accuracy 
+                                        for k in evaluation_results.keys() if k != 'comparison']),
+                    'models_with_integrity_issues': len([r for r in self.integrity_reports 
+                                                       if not r.passed and 'predictions' in r.step_name]) if self.integrity_checker else 0
+                }
+                self.performance_monitor.end_step_monitoring("model_evaluation", custom_metrics)
+            
             # 체크포인트 저장
             checkpoint_data = {
                 'models_evaluated': list(evaluation_results.keys()),
                 'best_model': max(evaluation_results.keys(), 
                                 key=lambda k: evaluation_results[k].classification_metrics.accuracy 
                                 if k != 'comparison' else 0),
-                'evaluation_completed': True
+                'evaluation_completed': True,
+                'integrity_checks_passed': len([r for r in self.integrity_reports if r.passed]) if self.integrity_checker else 0
             }
             self.checkpoint_manager.save_checkpoint('model_evaluation', checkpoint_data, step_time)
             
@@ -359,6 +461,10 @@ class WatermelonClassificationPipeline:
             return evaluation_results
             
         except Exception as e:
+            # 오류 발생 시에도 성능 모니터링 종료
+            if self.performance_monitor:
+                self.performance_monitor.end_step_monitoring("model_evaluation", {'error': str(e)})
+                
             self.logger.error(f"❌ 3단계 실패: {e}")
             raise
     
@@ -537,13 +643,57 @@ class WatermelonClassificationPipeline:
                 for step, duration in self.step_times.items():
                     self.logger.info(f"  {step}: {duration:.2f}초 ({duration/total_time*100:.1f}%)")
             
+            # 성능 및 무결성 보고서 생성
+            performance_summary = {}
+            integrity_summary = {}
+            
+            if self.performance_monitor:
+                performance_summary = self.performance_monitor.get_performance_summary()
+                # 성능 보고서 저장
+                self.performance_monitor.save_performance_report("results/performance_report.json")
+            
+            if self.integrity_checker:
+                integrity_summary = self.integrity_checker.get_summary_report()
+                # 무결성 보고서 저장
+                try:
+                    from pathlib import Path
+                    results_dir = Path("results")
+                    results_dir.mkdir(exist_ok=True)
+                    
+                    import json
+                    integrity_report_path = results_dir / "integrity_report.json"
+                    with open(integrity_report_path, 'w', encoding='utf-8') as f:
+                        json.dump(integrity_summary, f, indent=2, ensure_ascii=False)
+                    
+                    self.logger.info(f"📊 무결성 보고서 저장: {integrity_report_path}")
+                except Exception as e:
+                    self.logger.warning(f"무결성 보고서 저장 실패: {e}")
+            
             # 최종 결과 요약
             pipeline_results['execution_summary'] = {
                 'total_time': total_time,
                 'step_times': self.step_times,
                 'completed_at': datetime.now().isoformat(),
-                'success': True
+                'success': True,
+                'performance_summary': performance_summary,
+                'integrity_summary': integrity_summary
             }
+            
+            # 최종 통계 로깅
+            if performance_summary:
+                self.logger.info("📊 성능 요약:")
+                if 'overall_statistics' in performance_summary:
+                    stats = performance_summary['overall_statistics']
+                    self.logger.info(f"  측정된 단계: {stats.get('total_steps_measured', 0)}개")
+                    self.logger.info(f"  총 메모리 사용: {stats.get('total_memory_used', 0):.2f} MB")
+            
+            if integrity_summary and 'overall_statistics' in integrity_summary:
+                stats = integrity_summary['overall_statistics']
+                self.logger.info("📊 무결성 검사 요약:")
+                self.logger.info(f"  총 검사: {stats.get('total_individual_checks', 0)}개")
+                self.logger.info(f"  통과율: {stats.get('overall_success_rate', 0):.1%}")
+                self.logger.info(f"  경고: {stats.get('total_warnings', 0)}개")
+                self.logger.info(f"  오류: {stats.get('total_errors', 0)}개")
             
             # 체크포인트 정리
             self.checkpoint_manager.clear_checkpoint()
@@ -667,6 +817,19 @@ def create_argument_parser():
         help='로그 레벨 설정 (기본값: INFO)'
     )
     
+    # 품질 관리 옵션
+    parser.add_argument(
+        '--no-integrity-checks', 
+        action='store_true',
+        help='데이터 무결성 검사 비활성화'
+    )
+    
+    parser.add_argument(
+        '--no-performance-monitoring', 
+        action='store_true',
+        help='성능 모니터링 비활성화'
+    )
+    
     return parser
 
 
@@ -681,7 +844,9 @@ def main():
     try:
         # 파이프라인 초기화
         pipeline = WatermelonClassificationPipeline(
-            checkpoint_dir=args.checkpoint_dir
+            checkpoint_dir=args.checkpoint_dir,
+            enable_integrity_checks=not args.no_integrity_checks,
+            enable_performance_monitoring=not args.no_performance_monitoring
         )
         
         # 체크포인트 정리 (요청된 경우)
@@ -718,6 +883,8 @@ def main():
             logger.info(f"  Core ML 변환: {not args.no_coreml}")
             logger.info(f"  체크포인트에서 재시작: {args.resume}")
             logger.info(f"  체크포인트 디렉토리: {args.checkpoint_dir}")
+            logger.info(f"  데이터 무결성 검사: {not args.no_integrity_checks}")
+            logger.info(f"  성능 모니터링: {not args.no_performance_monitoring}")
             logger.info("✅ 설정 확인 완료")
             return
         
