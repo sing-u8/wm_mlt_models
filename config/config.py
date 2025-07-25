@@ -20,7 +20,7 @@ class Config:
     model_output_dir: str = "data/models"
     
     # 오디오 처리 파라미터
-    sample_rate: int = 22050
+    sample_rate: int = 16000 #22050
     hop_length: int = 512
     n_mfcc: int = 13
     n_chroma: int = 12

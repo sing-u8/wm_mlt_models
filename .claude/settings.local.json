@@ -7,7 +7,25 @@
       "Bash(chmod:*)",
       "Bash(python3:*)",
       "Bash(pip3 uninstall:*)",
-      "Bash(pip3 install:*)"
+      "Bash(pip3 install:*)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py -v --tb=short)",
+      "Bash(source:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py -v --tb=short -k \"test_snr_calculation_accuracy or test_augment_noise_function\" --no-header)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestAudioAugmentorExtended::test_snr_calculation_accuracy -v --tb=short)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestAudioAugmentorExtended::test_zero_signal_handling -v --tb=short)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestAudioAugmentorExtended::test_different_length_signals -v --tb=short)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestAudioAugmentorExtended -v --tb=short -x)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestAudioAugmentorExtended::test_snr_scaling_various_levels -v --tb=short)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py -v --tb=short -x)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestBatchAugmentorExtended -v --tb=short)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestAugmentationIntegration -v --tb=short)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestAugmentationPerformance -v --tb=short)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestAudioAugmentorExtended::test_augment_noise_function -v --tb=short)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestAudioAugmentorExtended::test_extreme_snr_values -v --tb=short)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py::TestAudioAugmentorExtended::test_augment_noise_function tests/unit/data/test_augmentation_extended.py::TestAudioAugmentorExtended::test_extreme_snr_values -v --tb=short)",
+      "Bash(python -m pytest tests/unit/data/test_augmentation_extended.py --tb=short -q)",
+      "Bash(python:*)"
     ],
     "deny": []
   }

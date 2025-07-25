@@ -5,7 +5,8 @@ soundfile>=0.12.0
 # Machine learning
 numpy==1.24.4
 pandas>=2.0.0
-scikit-learn==1.5.0
+scikit-learn==1.1.2
+torch==2.7.1
 
 # Model export and conversion
 coremltools>=7.0
