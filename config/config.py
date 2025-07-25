@@ -23,6 +23,8 @@ class Config:
     sample_rate: int = 16000 #22050
     n_fft: int = 256          # FFT 윈도우 크기 (짧은 오디오 대응)
     hop_length: int = 64      # n_fft // 4 (표준 25% 오버랩)
+    n_mels: int = 64          # Mel 필터 개수 (짧은 오디오 최적화)
+    fmax: int = 4000          # 최대 주파수 (수박 소리 분석용)
     n_mfcc: int = 13
     n_chroma: int = 12
     
