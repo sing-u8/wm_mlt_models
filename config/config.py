@@ -21,7 +21,8 @@ class Config:
     
     # 오디오 처리 파라미터
     sample_rate: int = 16000 #22050
-    hop_length: int = 512
+    n_fft: int = 256          # FFT 윈도우 크기 (짧은 오디오 대응)
+    hop_length: int = 64      # n_fft // 4 (표준 25% 오버랩)
     n_mfcc: int = 13
     n_chroma: int = 12
     

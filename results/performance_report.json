@@ -1,50 +1,50 @@
 {
-  "generated_at": "2025-07-25T12:41:56.347242",
+  "generated_at": "2025-07-26T02:25:02.211309",
   "performance_summary": {
     "overall_statistics": {
       "total_steps_measured": 2,
       "unique_steps": 2,
-      "total_execution_time": 1401.3206748962402,
-      "total_memory_used": -366.640625,
+      "total_execution_time": 681.1203510761261,
+      "total_memory_used": 290.25,
       "measurement_period": {
-        "start": 1753413324.945602,
-        "end": 1753414916.204844
+        "start": 1753463486.345848,
+        "end": 1753464302.091895
       }
     },
     "step_averages": {
       "data_loading": {
-        "avg_execution_time": 1386.9346718788147,
-        "avg_memory_usage": -280.5,
-        "avg_cpu_usage": 97.2,
+        "avg_execution_time": 673.8223838806152,
+        "avg_memory_usage": 105.109375,
+        "avg_cpu_usage": 100.0,
         "run_count": 1
       },
       "model_evaluation": {
-        "avg_execution_time": 14.386003017425537,
-        "avg_memory_usage": -86.140625,
-        "avg_cpu_usage": 100.0,
+        "avg_execution_time": 7.297967195510864,
+        "avg_memory_usage": 185.140625,
+        "avg_cpu_usage": 96.2,
         "run_count": 1
       }
     },
     "performance_insights": {
       "slowest_step": {
         "name": "data_loading",
-        "avg_time": 1386.9346718788147
+        "avg_time": 673.8223838806152
       },
       "fastest_step": {
         "name": "model_evaluation",
-        "avg_time": 14.386003017425537
+        "avg_time": 7.297967195510864
       },
       "memory_intensive_step": {
         "name": "model_evaluation",
-        "avg_memory": -86.140625
+        "avg_memory": 185.140625
       }
     },
     "system_info": {
       "cpu_count": 10,
       "memory_total": 16.0,
-      "memory_available": 2.4699249267578125,
+      "memory_available": 5.66156005859375,
       "disk_total": 926.3517189025879,
-      "disk_free": 100.59254837036133,
+      "disk_free": 113.22829818725586,
       "python_version": "3.9",
       "platform": "Darwin"
     }
@@ -52,20 +52,20 @@
   "detailed_metrics": [
     {
       "step_name": "data_loading",
-      "start_time": 1753413324.945602,
-      "end_time": 1753414711.8802738,
-      "execution_time": 1386.9346718788147,
-      "memory_before": 339.9375,
-      "memory_after": 59.4375,
-      "memory_peak": 339.9375,
-      "memory_used": -280.5,
-      "cpu_percent": 97.2,
+      "start_time": 1753463486.345848,
+      "end_time": 1753464160.168232,
+      "execution_time": 673.8223838806152,
+      "memory_before": 424.953125,
+      "memory_after": 530.0625,
+      "memory_peak": 530.0625,
+      "memory_used": 105.109375,
+      "cpu_percent": 100.0,
       "system_info": {
         "cpu_count": 10,
         "memory_total": 16.0,
-        "memory_available": 2.4699249267578125,
+        "memory_available": 5.66156005859375,
         "disk_total": 926.3517189025879,
-        "disk_free": 100.59254837036133,
+        "disk_free": 113.22829818725586,
         "python_version": "3.9",
         "platform": "Darwin"
       },
@@ -80,27 +80,27 @@
     },
     {
       "step_name": "model_evaluation",
-      "start_time": 1753414901.818841,
-      "end_time": 1753414916.204844,
-      "execution_time": 14.386003017425537,
-      "memory_before": 299.75,
-      "memory_after": 213.609375,
-      "memory_peak": 299.75,
-      "memory_used": -86.140625,
-      "cpu_percent": 100.0,
+      "start_time": 1753464294.793928,
+      "end_time": 1753464302.091895,
+      "execution_time": 7.297967195510864,
+      "memory_before": 482.625,
+      "memory_after": 667.765625,
+      "memory_peak": 667.765625,
+      "memory_used": 185.140625,
+      "cpu_percent": 96.2,
       "system_info": {
         "cpu_count": 10,
         "memory_total": 16.0,
-        "memory_available": 2.466400146484375,
+        "memory_available": 5.152862548828125,
         "disk_total": 926.3517189025879,
-        "disk_free": 102.57280349731445,
+        "disk_free": 113.21734619140625,
         "python_version": "3.9",
         "platform": "Darwin"
       },
       "custom_metrics": {
         "models_evaluated": 2,
         "test_samples": 690,
-        "best_accuracy": 0.9536231884057971,
+        "best_accuracy": 0.9144927536231884,
         "models_with_integrity_issues": 0
       }
     }

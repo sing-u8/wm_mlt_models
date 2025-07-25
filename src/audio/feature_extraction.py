@@ -218,7 +218,8 @@ class AudioFeatureExtractor(LoggerMixin):
                 y=y, 
                 sr=sr,
                 n_mfcc=self.config.n_mfcc,
-                hop_length=self.config.hop_length
+                hop_length=self.config.hop_length,
+                n_fft=self.config.n_fft
             )
             
             # 시간 축에 대한 평균을 계산하여 정적 특징으로 변환
@@ -251,7 +252,8 @@ class AudioFeatureExtractor(LoggerMixin):
             mel_spec = librosa.feature.melspectrogram(
                 y=y, 
                 sr=sr,
-                hop_length=self.config.hop_length
+                hop_length=self.config.hop_length,
+                n_fft=self.config.n_fft
             )
             
             # 로그 변환
@@ -288,7 +290,8 @@ class AudioFeatureExtractor(LoggerMixin):
             spec_centroid = librosa.feature.spectral_centroid(
                 y=y, 
                 sr=sr,
-                hop_length=self.config.hop_length
+                hop_length=self.config.hop_length,
+                n_fft=self.config.n_fft
             )
             centroid_mean = np.mean(spec_centroid)
             
@@ -297,6 +300,7 @@ class AudioFeatureExtractor(LoggerMixin):
                 y=y, 
                 sr=sr,
                 hop_length=self.config.hop_length,
+                n_fft=self.config.n_fft,
                 roll_percent=0.85
             )
             rolloff_mean = np.mean(spec_rolloff)
@@ -336,6 +340,7 @@ class AudioFeatureExtractor(LoggerMixin):
                 y=y, 
                 sr=sr,
                 hop_length=self.config.hop_length,
+                n_fft=self.config.n_fft,
                 n_chroma=self.config.n_chroma
             )
             
