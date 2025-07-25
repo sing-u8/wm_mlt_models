@@ -1,0 +1,62 @@
+{
+  "overall_statistics": {
+    "total_checks_run": 6,
+    "total_individual_checks": 41,
+    "total_passed_checks": 38,
+    "total_failed_checks": 3,
+    "overall_success_rate": 0.926829268292683,
+    "total_warnings": 3,
+    "total_errors": 0
+  },
+  "step_summaries": [
+    {
+      "step_name": "training_data",
+      "passed": true,
+      "success_rate": 0.875,
+      "checks": 8,
+      "warnings": 1,
+      "errors": 0
+    },
+    {
+      "step_name": "validation_data",
+      "passed": true,
+      "success_rate": 0.875,
+      "checks": 8,
+      "warnings": 1,
+      "errors": 0
+    },
+    {
+      "step_name": "test_data",
+      "passed": true,
+      "success_rate": 0.875,
+      "checks": 8,
+      "warnings": 1,
+      "errors": 0
+    },
+    {
+      "step_name": "data_loading_consistency",
+      "passed": true,
+      "success_rate": 1.0,
+      "checks": 5,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "step_name": "svm_predictions",
+      "passed": true,
+      "success_rate": 1.0,
+      "checks": 6,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "step_name": "random_forest_predictions",
+      "passed": true,
+      "success_rate": 1.0,
+      "checks": 6,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "overall_status": "PASSED"
+}

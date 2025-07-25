@@ -9,7 +9,7 @@ import json
 import gc
 import threading
 from datetime import datetime
-from typing import Dict, Any, List, Optional, Callable
+from typing import Dict, Any, List, Optional, Callable, Tuple
 from dataclasses import dataclass, asdict
 from pathlib import Path
 

@@ -4,7 +4,10 @@
       "Bash(find:*)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(python3:*)",
+      "Bash(pip3 uninstall:*)",
+      "Bash(pip3 install:*)"
     ],
     "deny": []
   }

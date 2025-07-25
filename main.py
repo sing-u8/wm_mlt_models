@@ -153,7 +153,7 @@ class WatermelonClassificationPipeline:
         self.logger.info(f"데이터 무결성 검사: {'활성화' if enable_integrity_checks else '비활성화'}")
         self.logger.info(f"성능 모니터링: {'활성화' if enable_performance_monitoring else '비활성화'}")
     
-    def step_1_load_data(self, skip_augmentation: bool = False) -> Tuple:
+    def step_1_load_data(self, skip_augmentation: bool = False, use_existing_augmented: bool = False) -> Tuple:
         """
         1단계: 데이터 로딩 및 전처리를 수행합니다.
         
@@ -161,6 +161,8 @@ class WatermelonClassificationPipeline:
         -----------
         skip_augmentation : bool
             데이터 증강을 건너뛸지 여부
+        use_existing_augmented : bool
+            기존에 생성된 증강 데이터를 사용할지 여부
             
         Returns:
         --------
@@ -180,18 +182,11 @@ class WatermelonClassificationPipeline:
             # 데이터 파이프라인 실행
             self.logger.info("데이터 파이프라인 실행 중...")
             
-            pipeline_result = self.data_pipeline.run_complete_pipeline(
-                skip_augmentation=skip_augmentation
+            # 데이터 파이프라인 실행 - tuple 형태로 반환됨
+            X_train, y_train, X_val, y_val, X_test, y_test = self.data_pipeline.run_complete_pipeline(
+                skip_augmentation=skip_augmentation,
+                use_existing_augmented=use_existing_augmented
             )
-            
-            # 결과 추출
-            datasets = pipeline_result['datasets']
-            X_train = datasets['train']['features']
-            y_train = datasets['train']['labels']
-            X_val = datasets['validation']['features']
-            y_val = datasets['validation']['labels']
-            X_test = datasets['test']['features']
-            y_test = datasets['test']['labels']
             
             # 데이터 무결성 검사
             if self.integrity_checker:
@@ -396,7 +391,7 @@ class WatermelonClassificationPipeline:
                         self.logger.warning(f"⚠️ {model_name} 모델 출력 무결성 검사에서 문제 발견")
                 
                 # 평가 결과 로깅
-                metrics = eval_result.classification_metrics
+                metrics = eval_result
                 self.logger.info(f"  정확도: {metrics.accuracy:.4f}")
                 self.logger.info(f"  F1-score (macro): {metrics.f1_macro:.4f}")
                 self.logger.info(f"  정밀도 (macro): {metrics.precision_macro:.4f}")
@@ -418,15 +413,15 @@ class WatermelonClassificationPipeline:
                 # 비교 결과 로깅
                 self.logger.info("📊 모델 비교 결과:")
                 self.logger.info(f"  {model1_name} vs {model2_name}")
-                self.logger.info(f"  정확도 차이: {comparison_result.accuracy_difference:.4f}")
-                self.logger.info(f"  F1-score 차이: {comparison_result.f1_difference:.4f}")
-                self.logger.info(f"  통계적 유의성 (정확도): p={comparison_result.accuracy_p_value:.4f}")
+                self.logger.info(f"  정확도 차이: {comparison_result.accuracy_diff:.4f}")
+                self.logger.info(f"  F1-score 차이: {comparison_result.f1_macro_diff:.4f}")
+                self.logger.info(f"  통계적 유의성 (정확도): p={comparison_result.accuracy_ttest['pvalue']:.4f}")
                 
                 evaluation_results['comparison'] = comparison_result
             
             # 종합 평가 보고서 생성
-            evaluation_report = self.model_evaluator.create_evaluation_report(
-                evaluation_results, save_report=True
+            evaluation_report = self.model_evaluator.generate_evaluation_report(
+                self.model_trainer.trained_models, X_test, y_test, save_report=True
             )
             
             step_time = time.time() - step_start_time
@@ -437,7 +432,7 @@ class WatermelonClassificationPipeline:
                 custom_metrics = {
                     'models_evaluated': len(self.model_trainer.trained_models),
                     'test_samples': len(X_test),
-                    'best_accuracy': max([evaluation_results[k].classification_metrics.accuracy 
+                    'best_accuracy': max([evaluation_results[k].accuracy 
                                         for k in evaluation_results.keys() if k != 'comparison']),
                     'models_with_integrity_issues': len([r for r in self.integrity_reports 
                                                        if not r.passed and 'predictions' in r.step_name]) if self.integrity_checker else 0
@@ -448,14 +443,14 @@ class WatermelonClassificationPipeline:
             checkpoint_data = {
                 'models_evaluated': list(evaluation_results.keys()),
                 'best_model': max(evaluation_results.keys(), 
-                                key=lambda k: evaluation_results[k].classification_metrics.accuracy 
+                                key=lambda k: evaluation_results[k].accuracy 
                                 if k != 'comparison' else 0),
                 'evaluation_completed': True,
                 'integrity_checks_passed': len([r for r in self.integrity_reports if r.passed]) if self.integrity_checker else 0
             }
             self.checkpoint_manager.save_checkpoint('model_evaluation', checkpoint_data, step_time)
             
-            self.logger.info(f"✅ 평가 보고서 저장: {evaluation_report.report_path}")
+            self.logger.info(f"✅ 평가 보고서 생성 완료: {evaluation_report.evaluation_id}")
             self.logger.info(f"⏱️  3단계 완료 시간: {step_time:.2f}초")
             
             return evaluation_results
@@ -558,6 +553,7 @@ class WatermelonClassificationPipeline:
             raise
     
     def run_complete_pipeline(self, skip_augmentation: bool = False,
+                            use_existing_augmented: bool = False,
                             cv_folds: int = 5, convert_to_coreml: bool = True,
                             resume_from_checkpoint: bool = False) -> Dict[str, Any]:
         """
@@ -567,6 +563,8 @@ class WatermelonClassificationPipeline:
         -----------
         skip_augmentation : bool
             데이터 증강을 건너뛸지 여부
+        use_existing_augmented : bool
+            기존에 생성된 증강 데이터를 사용할지 여부
         cv_folds : int
             교차 검증 폴드 수
         convert_to_coreml : bool
@@ -599,7 +597,9 @@ class WatermelonClassificationPipeline:
             
             # 1단계: 데이터 로딩
             if not checkpoint or checkpoint['step'] in ['data_loading']:
-                X_train, y_train, X_val, y_val, X_test, y_test = self.step_1_load_data(skip_augmentation)
+                X_train, y_train, X_val, y_val, X_test, y_test = self.step_1_load_data(
+                    skip_augmentation, use_existing_augmented
+                )
                 pipeline_results['data_loading'] = {
                     'train_samples': len(X_train),
                     'val_samples': len(X_val),
@@ -609,7 +609,9 @@ class WatermelonClassificationPipeline:
                 self.logger.info("📋 데이터 로딩 단계 건너뛰기 (체크포인트에서 복원)")
                 # 실제 구현에서는 체크포인트에서 데이터를 복원해야 함
                 # 여기서는 간단화를 위해 다시 로딩
-                X_train, y_train, X_val, y_val, X_test, y_test = self.step_1_load_data(skip_augmentation)
+                X_train, y_train, X_val, y_val, X_test, y_test = self.step_1_load_data(
+                    skip_augmentation, use_existing_augmented
+                )
             
             # 2단계: 모델 훈련
             if not checkpoint or checkpoint['step'] in ['data_loading', 'model_training']:
@@ -764,6 +766,12 @@ def create_argument_parser():
     )
     
     parser.add_argument(
+        '--use-existing-augmented', 
+        action='store_true',
+        help='기존에 생성된 증강 데이터를 사용 (--skip-augmentation과 함께 사용 가능)'
+    )
+    
+    parser.add_argument(
         '--cv-folds', 
         type=int, 
         default=5,
@@ -893,6 +901,7 @@ def main():
         
         results = pipeline.run_complete_pipeline(
             skip_augmentation=args.skip_augmentation,
+            use_existing_augmented=args.use_existing_augmented,
             cv_folds=args.cv_folds,
             convert_to_coreml=not args.no_coreml,
             resume_from_checkpoint=args.resume

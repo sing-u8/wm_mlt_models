@@ -1,0 +1,16 @@
+{
+  "model_type": "svm",
+  "feature_count": 30,
+  "class_names": [
+    "watermelon_A",
+    "watermelon_B",
+    "watermelon_C"
+  ],
+  "training_completed": true,
+  "model_path": "/Users/parksingyu/PycharmProjects/wm_mlt_models/data/models/pickle/svm_model.pkl",
+  "model_format": "pickle",
+  "created_at": "2025-07-25T12:41:56.309251",
+  "model_size_bytes": 857429,
+  "python_version": "3.9",
+  "sklearn_version": "1.5.0"
+}

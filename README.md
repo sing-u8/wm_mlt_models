@@ -190,6 +190,9 @@ python main.py
 # 소음 증강 없이 실행 (소음 파일이 없는 경우)
 python main.py --skip-augmentation
 
+# 기존 증강 데이터 재사용 (권장 - 시간 절약)
+python main.py --skip-augmentation --use-existing-augmented
+
 # 5-fold 교차 검증으로 실행 (기본값)
 python main.py --cv-folds 5
 
@@ -232,6 +235,51 @@ python main.py --help
 - **[API 참조](docs/API_REFERENCE.md)**: 모든 클래스와 함수에 대한 상세 문서
 - **[Core ML 사용법](docs/COREML_USAGE.md)**: iOS/macOS에서 모델 사용 방법
 - **[데이터 배치 가이드](DATA_PLACEMENT_GUIDE.md)**: 데이터 구조 및 배치 방법
+- **[증강 데이터 사용 가이드](docs/AUGMENTED_DATA_USAGE_GUIDE.md)**: 증강 데이터 재사용 및 관리 방법
+- **[단일 모델 학습 가이드](docs/SINGLE_MODEL_TRAINING_GUIDE.md)**: 개별 모델 학습 및 테스트 방법
+
+## 💡 증강 데이터 사용 전략
+
+프로젝트는 3가지 증강 데이터 사용 모드를 지원합니다:
+
+### 모드 1: 새로운 증강 데이터 생성 (기본값)
+```bash
+python main.py
+```
+- 매번 새로운 증강 데이터 생성
+- **장점**: 최신 설정으로 증강 데이터 생성
+- **단점**: 실행 시간이 오래 걸림 (5-30분)
+- **사용 시점**: 최초 실행 또는 증강 설정 변경 시
+
+### 모드 2: 기존 증강 데이터 재사용 (권장)
+```bash
+python main.py --skip-augmentation --use-existing-augmented
+```
+- 이전에 생성된 증강 데이터 재사용
+- **장점**: 빠른 실행 + 증강 효과 유지
+- **단점**: 기존 증강 데이터가 있어야 함
+- **사용 시점**: 증강 데이터가 이미 있고 재사용하려는 경우
+
+### 모드 3: 원본 데이터만 사용
+```bash
+python main.py --skip-augmentation
+```
+- 증강 없이 원본 데이터만 사용
+- **장점**: 가장 빠른 실행
+- **단점**: 증강 효과 없음
+- **사용 시점**: 빠른 프로토타이핑 또는 디버깅
+
+### 추천 워크플로우
+```bash
+# 1단계: 최초 실행으로 증강 데이터 생성
+python main.py
+
+# 2단계: 이후 실행에서는 기존 증강 데이터 재사용
+python main.py --skip-augmentation --use-existing-augmented
+
+# 3단계: 빠른 테스트가 필요할 때
+python main.py --skip-augmentation
+```
 
 ## 🔧 고급 사용법
 
@@ -349,10 +397,13 @@ python main.py --no-performance-monitoring
 
 **문제**: 훈련이 너무 느림
 ```bash
-# 해결책: 교차 검증 폴드 수 줄이기
+# 해결책: 기존 증강 데이터 재사용 (권장)
+python main.py --skip-augmentation --use-existing-augmented
+
+# 또는 교차 검증 폴드 수 줄이기
 python main.py --cv-folds 3
 
-# 또는 증강 생략
+# 또는 증강 완전히 생략
 python main.py --skip-augmentation
 ```
 

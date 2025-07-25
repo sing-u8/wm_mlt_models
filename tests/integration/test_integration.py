@@ -299,9 +299,9 @@ def test_pipeline_steps_integration():
                 assert model_name in evaluation_results, f"3단계: {model_name} 평가 결과 누락"
                 
                 eval_result = evaluation_results[model_name]
-                assert hasattr(eval_result, 'classification_metrics'), f"3단계: {model_name} 메트릭 누락"
+                assert hasattr(eval_result, 'accuracy'), f"3단계: {model_name} 메트릭 누락"
                 
-                metrics = eval_result.classification_metrics
+                metrics = eval_result
                 assert hasattr(metrics, 'accuracy'), f"3단계: {model_name} 정확도 누락"
                 assert 0 <= metrics.accuracy <= 1, f"3단계: {model_name} 정확도 범위 오류"
             

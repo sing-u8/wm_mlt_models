@@ -412,6 +412,68 @@ class DataPipeline(LoggerMixin):
         
         return augmented_train_files
     
+    def load_existing_augmented_data(self) -> Dict[str, List[AudioFile]]:
+        """
+        기존에 생성된 증강 데이터를 로드합니다.
+        
+        Returns:
+        --------
+        Dict[str, List[AudioFile]]
+            클래스별 증강된 훈련 파일 목록
+        """
+        self.logger.info("=== 기존 증강 데이터 로딩 시작 ===")
+        
+        augmented_base_dir = os.path.join(self.processed_dir, "augmented")
+        augmented_train_files = {}
+        
+        # 원본 훈련 데이터 로드
+        train_files = self._dataset_split.train_files
+        
+        for class_name in self.config.class_names:
+            augmented_audio_files = []
+            
+            # 원본 파일들 추가
+            if class_name in train_files:
+                augmented_audio_files.extend(train_files[class_name])
+                self.logger.info(f"클래스 {class_name}: {len(train_files[class_name])}개 원본 파일")
+            
+            # 증강된 파일들 검색
+            class_aug_dir = os.path.join(augmented_base_dir, class_name)
+            aug_count = 0
+            
+            if os.path.exists(class_aug_dir):
+                for file_name in os.listdir(class_aug_dir):
+                    if file_name.lower().endswith('.wav') and '_noise_' in file_name:
+                        file_path = os.path.join(class_aug_dir, file_name)
+                        
+                        augmented_file = AudioFile(
+                            file_path=file_path,
+                            class_name=class_name,
+                            split="train",
+                            is_augmented=True,
+                            original_file=None
+                        )
+                        augmented_audio_files.append(augmented_file)
+                        aug_count += 1
+                
+                self.logger.info(f"  {aug_count}개 증강 파일 발견")
+            else:
+                self.logger.warning(f"  증강 디렉토리 없음: {class_aug_dir}")
+            
+            augmented_train_files[class_name] = augmented_audio_files
+            self.logger.info(f"  총 {len(augmented_audio_files)}개 파일 (원본 + 증강)")
+        
+        # 전체 통계
+        total_original = sum(len(files) for files in train_files.values())
+        total_augmented = sum(len(files) for files in augmented_train_files.values())
+        
+        self.logger.info("=== 기존 증강 데이터 로딩 완료 ===")
+        self.logger.info(f"  원본: {total_original}개 파일")
+        self.logger.info(f"  총 파일: {total_augmented}개 파일")
+        self.logger.info(f"  증강 비율: {(total_augmented / total_original):.1f}x")
+        
+        return augmented_train_files
+    
     def validate_data_integrity(self) -> bool:
         """
         데이터 무결성을 검증하고 데이터 누출이 없는지 확인합니다.
@@ -574,7 +636,8 @@ class DataPipeline(LoggerMixin):
         
         return X_train, y_train, X_val, y_val, X_test, y_test
     
-    def run_complete_pipeline(self, skip_augmentation: bool = False) -> Tuple[np.ndarray, np.ndarray, 
+    def run_complete_pipeline(self, skip_augmentation: bool = False, 
+                             use_existing_augmented: bool = False) -> Tuple[np.ndarray, np.ndarray, 
                                                                              np.ndarray, np.ndarray, 
                                                                              np.ndarray, np.ndarray]:
         """
@@ -587,6 +650,8 @@ class DataPipeline(LoggerMixin):
         -----------
         skip_augmentation : bool
             증강을 건너뛸지 여부
+        use_existing_augmented : bool
+            기존에 생성된 증강 데이터를 사용할지 여부
             
         Returns:
         --------
@@ -604,10 +669,16 @@ class DataPipeline(LoggerMixin):
         
         # 3. 훈련 증강 (옵션)
         if not skip_augmentation:
+            # 새로운 증강 데이터 생성
             augmented_train = self.augment_training_data()
             self._augmented_train_files = augmented_train
+        elif use_existing_augmented:
+            # 기존 증강 데이터 사용
+            self.logger.info("기존 증강 데이터를 로드합니다.")
+            self._augmented_train_files = self.load_existing_augmented_data()
         else:
-            self.logger.info("증강 건너뜀")
+            # 원본 데이터만 사용
+            self.logger.info("증강 건너뜀 - 원본 데이터만 사용")
             self._augmented_train_files = dataset_split.train_files
         
         # 4. 특징 추출

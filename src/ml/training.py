@@ -237,7 +237,7 @@ class ModelTrainer(LoggerMixin):
                 model_type=model_type,
                 best_params=grid_search.best_params_,
                 best_score=grid_search.best_score_,
-                cv_scores=cv_scores.tolist(),
+                cv_scores=np.array(cv_scores),
                 training_time=training_time,
                 n_features=X_train.shape[1],
                 n_samples=X_train.shape[0],
