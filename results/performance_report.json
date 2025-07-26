@@ -1,50 +1,50 @@
 {
-  "generated_at": "2025-07-26T02:25:02.211309",
+  "generated_at": "2025-07-26T14:04:28.596844",
   "performance_summary": {
     "overall_statistics": {
       "total_steps_measured": 2,
       "unique_steps": 2,
-      "total_execution_time": 681.1203510761261,
-      "total_memory_used": 290.25,
+      "total_execution_time": 707.0885760784149,
+      "total_memory_used": 248.953125,
       "measurement_period": {
-        "start": 1753463486.345848,
-        "end": 1753464302.091895
+        "start": 1753505427.842426,
+        "end": 1753506268.4719622
       }
     },
     "step_averages": {
       "data_loading": {
-        "avg_execution_time": 673.8223838806152,
-        "avg_memory_usage": 105.109375,
+        "avg_execution_time": 696.3752949237823,
+        "avg_memory_usage": 106.03125,
         "avg_cpu_usage": 100.0,
         "run_count": 1
       },
       "model_evaluation": {
-        "avg_execution_time": 7.297967195510864,
-        "avg_memory_usage": 185.140625,
-        "avg_cpu_usage": 96.2,
+        "avg_execution_time": 10.713281154632568,
+        "avg_memory_usage": 142.921875,
+        "avg_cpu_usage": 99.1,
         "run_count": 1
       }
     },
     "performance_insights": {
       "slowest_step": {
         "name": "data_loading",
-        "avg_time": 673.8223838806152
+        "avg_time": 696.3752949237823
       },
       "fastest_step": {
         "name": "model_evaluation",
-        "avg_time": 7.297967195510864
+        "avg_time": 10.713281154632568
       },
       "memory_intensive_step": {
         "name": "model_evaluation",
-        "avg_memory": 185.140625
+        "avg_memory": 142.921875
       }
     },
     "system_info": {
       "cpu_count": 10,
       "memory_total": 16.0,
-      "memory_available": 5.66156005859375,
+      "memory_available": 5.841552734375,
       "disk_total": 926.3517189025879,
-      "disk_free": 113.22829818725586,
+      "disk_free": 112.33285903930664,
       "python_version": "3.9",
       "platform": "Darwin"
     }
@@ -52,20 +52,20 @@
   "detailed_metrics": [
     {
       "step_name": "data_loading",
-      "start_time": 1753463486.345848,
-      "end_time": 1753464160.168232,
-      "execution_time": 673.8223838806152,
-      "memory_before": 424.953125,
-      "memory_after": 530.0625,
-      "memory_peak": 530.0625,
-      "memory_used": 105.109375,
+      "start_time": 1753505427.842426,
+      "end_time": 1753506124.217721,
+      "execution_time": 696.3752949237823,
+      "memory_before": 424.703125,
+      "memory_after": 530.734375,
+      "memory_peak": 530.734375,
+      "memory_used": 106.03125,
       "cpu_percent": 100.0,
       "system_info": {
         "cpu_count": 10,
         "memory_total": 16.0,
-        "memory_available": 5.66156005859375,
+        "memory_available": 5.841552734375,
         "disk_total": 926.3517189025879,
-        "disk_free": 113.22829818725586,
+        "disk_free": 112.33285903930664,
         "python_version": "3.9",
         "platform": "Darwin"
       },
@@ -80,27 +80,27 @@
     },
     {
       "step_name": "model_evaluation",
-      "start_time": 1753464294.793928,
-      "end_time": 1753464302.091895,
-      "execution_time": 7.297967195510864,
-      "memory_before": 482.625,
-      "memory_after": 667.765625,
-      "memory_peak": 667.765625,
-      "memory_used": 185.140625,
-      "cpu_percent": 96.2,
+      "start_time": 1753506257.758681,
+      "end_time": 1753506268.4719622,
+      "execution_time": 10.713281154632568,
+      "memory_before": 509.0625,
+      "memory_after": 651.984375,
+      "memory_peak": 651.984375,
+      "memory_used": 142.921875,
+      "cpu_percent": 99.1,
       "system_info": {
         "cpu_count": 10,
         "memory_total": 16.0,
-        "memory_available": 5.152862548828125,
+        "memory_available": 5.1434478759765625,
         "disk_total": 926.3517189025879,
-        "disk_free": 113.21734619140625,
+        "disk_free": 112.2153549194336,
         "python_version": "3.9",
         "platform": "Darwin"
       },
       "custom_metrics": {
         "models_evaluated": 2,
         "test_samples": 690,
-        "best_accuracy": 0.9144927536231884,
+        "best_accuracy": 0.9304347826086956,
         "models_with_integrity_issues": 0
       }
     }

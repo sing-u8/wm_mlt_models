@@ -9,8 +9,8 @@
   "training_completed": true,
   "model_path": "/Users/parksingyu/PycharmProjects/wm_mlt_models/data/models/pickle/random_forest_model.pkl",
   "model_format": "pickle",
-  "created_at": "2025-07-26T02:25:02.210086",
-  "model_size_bytes": 5258417,
+  "created_at": "2025-07-26T14:04:28.594686",
+  "model_size_bytes": 9773890,
   "python_version": "3.9",
   "sklearn_version": "1.1.2"
 }

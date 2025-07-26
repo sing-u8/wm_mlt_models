@@ -1,0 +1,230 @@
+{
+  "evaluation_id": "eval_20250726_140422",
+  "created_at": "2025-07-26T14:04:28.470936",
+  "dataset_info": {
+    "test_samples": 690,
+    "n_features": 30,
+    "n_classes": 3
+  },
+  "model_metrics": {
+    "svm": {
+      "accuracy": 0.8608695652173913,
+      "precision_macro": 0.8611588143059808,
+      "precision_weighted": 0.8611588143059807,
+      "recall_macro": 0.8608695652173912,
+      "recall_weighted": 0.8608695652173913,
+      "f1_macro": 0.8609423277392211,
+      "f1_weighted": 0.8609423277392211,
+      "class_precision": {
+        "watermelon_A": 0.8414096916299559,
+        "watermelon_B": 0.8389830508474576,
+        "watermelon_C": 0.9030837004405287
+      },
+      "class_recall": {
+        "watermelon_A": 0.8304347826086956,
+        "watermelon_B": 0.8608695652173913,
+        "watermelon_C": 0.8913043478260869
+      },
+      "class_f1": {
+        "watermelon_A": 0.8358862144420132,
+        "watermelon_B": 0.849785407725322,
+        "watermelon_C": 0.8971553610503281
+      },
+      "class_support": {
+        "watermelon_A": 230,
+        "watermelon_B": 230,
+        "watermelon_C": 230
+      },
+      "confusion_matrix": [
+        [
+          191,
+          22,
+          17
+        ],
+        [
+          27,
+          198,
+          5
+        ],
+        [
+          9,
+          16,
+          205
+        ]
+      ],
+      "roc_auc": 0.9625771896660366,
+      "pr_auc": null
+    },
+    "random_forest": {
+      "accuracy": 0.9304347826086956,
+      "precision_macro": 0.9321602347516982,
+      "precision_weighted": 0.9321602347516982,
+      "recall_macro": 0.9304347826086956,
+      "recall_weighted": 0.9304347826086956,
+      "f1_macro": 0.9307448676974461,
+      "f1_weighted": 0.9307448676974461,
+      "class_precision": {
+        "watermelon_A": 0.9545454545454546,
+        "watermelon_B": 0.8821138211382114,
+        "watermelon_C": 0.9598214285714286
+      },
+      "class_recall": {
+        "watermelon_A": 0.9130434782608695,
+        "watermelon_B": 0.9434782608695652,
+        "watermelon_C": 0.9347826086956522
+      },
+      "class_f1": {
+        "watermelon_A": 0.9333333333333332,
+        "watermelon_B": 0.911764705882353,
+        "watermelon_C": 0.9471365638766521
+      },
+      "class_support": {
+        "watermelon_A": 230,
+        "watermelon_B": 230,
+        "watermelon_C": 230
+      },
+      "confusion_matrix": [
+        [
+          210,
+          14,
+          6
+        ],
+        [
+          10,
+          217,
+          3
+        ],
+        [
+          0,
+          15,
+          215
+        ]
+      ],
+      "roc_auc": 0.9925834908632641,
+      "pr_auc": null
+    }
+  },
+  "model_comparison": {
+    "model1_name": "svm",
+    "model2_name": "random_forest",
+    "model1_metrics": {
+      "accuracy": 0.8608695652173913,
+      "precision_macro": 0.8611588143059808,
+      "precision_weighted": 0.8611588143059807,
+      "recall_macro": 0.8608695652173912,
+      "recall_weighted": 0.8608695652173913,
+      "f1_macro": 0.8609423277392211,
+      "f1_weighted": 0.8609423277392211,
+      "class_precision": {
+        "watermelon_A": 0.8414096916299559,
+        "watermelon_B": 0.8389830508474576,
+        "watermelon_C": 0.9030837004405287
+      },
+      "class_recall": {
+        "watermelon_A": 0.8304347826086956,
+        "watermelon_B": 0.8608695652173913,
+        "watermelon_C": 0.8913043478260869
+      },
+      "class_f1": {
+        "watermelon_A": 0.8358862144420132,
+        "watermelon_B": 0.849785407725322,
+        "watermelon_C": 0.8971553610503281
+      },
+      "class_support": {
+        "watermelon_A": 230,
+        "watermelon_B": 230,
+        "watermelon_C": 230
+      },
+      "confusion_matrix": [
+        [
+          191,
+          22,
+          17
+        ],
+        [
+          27,
+          198,
+          5
+        ],
+        [
+          9,
+          16,
+          205
+        ]
+      ],
+      "roc_auc": 0.9625771896660366,
+      "pr_auc": null
+    },
+    "model2_metrics": {
+      "accuracy": 0.9304347826086956,
+      "precision_macro": 0.9321602347516982,
+      "precision_weighted": 0.9321602347516982,
+      "recall_macro": 0.9304347826086956,
+      "recall_weighted": 0.9304347826086956,
+      "f1_macro": 0.9307448676974461,
+      "f1_weighted": 0.9307448676974461,
+      "class_precision": {
+        "watermelon_A": 0.9545454545454546,
+        "watermelon_B": 0.8821138211382114,
+        "watermelon_C": 0.9598214285714286
+      },
+      "class_recall": {
+        "watermelon_A": 0.9130434782608695,
+        "watermelon_B": 0.9434782608695652,
+        "watermelon_C": 0.9347826086956522
+      },
+      "class_f1": {
+        "watermelon_A": 0.9333333333333332,
+        "watermelon_B": 0.911764705882353,
+        "watermelon_C": 0.9471365638766521
+      },
+      "class_support": {
+        "watermelon_A": 230,
+        "watermelon_B": 230,
+        "watermelon_C": 230
+      },
+      "confusion_matrix": [
+        [
+          210,
+          14,
+          6
+        ],
+        [
+          10,
+          217,
+          3
+        ],
+        [
+          0,
+          15,
+          215
+        ]
+      ],
+      "roc_auc": 0.9925834908632641,
+      "pr_auc": null
+    },
+    "accuracy_ttest": {
+      "statistic": -4.436481015878179,
+      "pvalue": 0.0021781251415288736
+    },
+    "f1_ttest": {
+      "statistic": -4.4184779732321235,
+      "pvalue": 0.00223101760267052
+    },
+    "accuracy_diff": -0.06956521739130428,
+    "f1_macro_diff": -0.06980253995822505,
+    "better_model": "random_forest",
+    "significance_level": 0.05
+  },
+  "feature_importance": null,
+  "cross_validation_scores": null,
+  "config_info": {
+    "class_names": [
+      "watermelon_A",
+      "watermelon_B",
+      "watermelon_C"
+    ],
+    "sample_rate": 16000,
+    "n_mfcc": 13
+  }
+}

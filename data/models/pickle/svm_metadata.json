@@ -9,8 +9,8 @@
   "training_completed": true,
   "model_path": "/Users/parksingyu/PycharmProjects/wm_mlt_models/data/models/pickle/svm_model.pkl",
   "model_format": "pickle",
-  "created_at": "2025-07-26T02:25:02.200726",
-  "model_size_bytes": 816089,
+  "created_at": "2025-07-26T14:04:28.581969",
+  "model_size_bytes": 795029,
   "python_version": "3.9",
   "sklearn_version": "1.1.2"
 }
