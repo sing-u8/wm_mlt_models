@@ -1,3 +1,17 @@
+## 나
+`uvicorn`,
+```python
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+```
+
+
+이 라이브러리 현재 추가가 안되어 있는데 #file:requirements.txt 에 추가해줄 수 있어?
+
+## AI Assistant
+네, requirements.txt 파일에 필요한 라이브러리들을 추가해드리겠습니다.네, requirements.txt 파일에 FastAPI와 uvicorn 라이브러리를 추가해드리겠습니다. 현재 파일에는 FastAPI 관련 라이브러리들이 없어서 import 오류가 발생하고 있는 것 같습니다.
+``` txt
 # Audio processing
 librosa>=0.10.0
 soundfile>=0.12.0
@@ -29,3 +43,9 @@ ipykernel>=6.25.0
 
 # Type hints
 typing-extensions>=4.7.0
+
+# FastAPI and server dependencies
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+python-multipart>=0.0.6
+
