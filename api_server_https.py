@@ -390,8 +390,8 @@ if __name__ == "__main__":
 
 
     # SSL 인증서 경로 설정
-    SSL_KEYFILE = "ssl/key.pem"  # 개인 키 파일 경로
-    SSL_CERTFILE = "ssl/cert.pem"  # 인증서 파일 경로
+    SSL_KEYFILE = "/etc/letsencrypt/live/www.singyupark.cloud/privkey.pem"  # 개인 키 파일 경로
+    SSL_CERTFILE = "/etc/letsencrypt/live/www.singyupark.cloud/cert.pem"  # 인증서 파일 경로
     
     # SSL 인증서 파일이 없으면 생성 스크립트 실행 안내
     if not os.path.exists(SSL_KEYFILE) or not os.path.exists(SSL_CERTFILE):
@@ -405,11 +405,11 @@ if __name__ == "__main__":
     # 실행 안내 정보 출력
     local_ip = get_local_ip()
     print(f"🍉 수박 당도 예측 서버 시작 (HTTPS)")
-    print(f"   - 로컬: https://localhost:8443")
-    print(f"   - 네트워크: https://{local_ip}:8443")
-    print(f"   - 상태 확인: https://{local_ip}:8443/health")
-    print(f"   - 특성 디버깅: https://{local_ip}:8443/debug-features")
-    print(f"   - 예측 API: https://{local_ip}:8443/predict")
+    print(f"   - 로컬: https://localhost:9001")
+    print(f"   - 네트워크: https://{local_ip}:9001")
+    print(f"   - 상태 확인: https://{local_ip}:9001/health")
+    print(f"   - 특성 디버깅: https://{local_ip}:9001/debug-features")
+    print(f"   - 예측 API: https://{local_ip}:9001/predict")
     print()
     print("⚠️  자체 서명 인증서 사용 시 브라우저에서 보안 경고가 나타날 수 있습니다.")
 
@@ -417,7 +417,7 @@ if __name__ == "__main__":
     uvicorn.run(
         app, 
         host="0.0.0.0", 
-        port=8443,
+        port=9001,
         ssl_keyfile=SSL_KEYFILE,
         ssl_certfile=SSL_CERTFILE,
         ssl_version=ssl.PROTOCOL_TLS_SERVER,
