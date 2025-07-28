@@ -381,10 +381,10 @@ if __name__ == "__main__":
     # 실행 안내 정보 출력
     local_ip = get_local_ip()
     print(f"🍉 수박 당도 예측 서버 시작")
-    print(f"   - 로컬: http://localhost:8000")
-    print(f"   - 네트워크: http://{local_ip}:8000")
-    print(f"   - 상태 확인: http://{local_ip}:8000/health")
-    print(f"   - 특성 디버깅: http://{local_ip}:8000/debug-features")
-    print(f"   - 예측 API: http://{local_ip}:8000/predict")
+    print(f"   - 로컬: http://localhost:9001")
+    print(f"   - 네트워크: http://{local_ip}:9001")
+    print(f"   - 상태 확인: http://{local_ip}:9001/health")
+    print(f"   - 특성 디버깅: http://{local_ip}:9001/debug-features")
+    print(f"   - 예측 API: http://{local_ip}:9001/predict")
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=9001)
