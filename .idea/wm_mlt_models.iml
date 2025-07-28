@@ -7,7 +7,7 @@
       <excludeFolder url="file://$MODULE_DIR$/data/processed" />
       <excludeFolder url="file://$MODULE_DIR$/data/raw" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.9 (PyTorch-Book-FIles)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.9 (wm_mlt_models)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
